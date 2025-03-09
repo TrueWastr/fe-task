@@ -48,6 +48,7 @@ export function extractNFTs(utxos: Utxo[]): NFT[] {
             Buffer.from(assetHex, "hex").toString("utf8") || assetHex;
           assetName = transformAssetName(decodedName);
         } catch (e) {
+          console.error(e);
           assetName = assetHex;
         }
         nfts.push({
