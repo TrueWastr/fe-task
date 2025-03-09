@@ -1,18 +1,82 @@
 .page {
   display: flex;
   flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  height: 100vh;
+  padding: 50px;
+
+  @media (max-width: 793px) {
+    padding: 20px;
+  }
 
   h1 {
     margin-bottom: 8px;
+    text-align: center;
   }
 
-  section {
+  .walletInfo {
     > p {
       text-align: center;
-      margin-bottom: 5px;
+      margin-bottom: 20px;
+      font-size: 30px;
+    }
+  }
+
+  .nftCollection {
+    display: flex;
+    flex-direction: column;
+
+    h2 {
+      font-size: 30px;
+      margin-bottom: 8px;
+    }
+    .nftGrid {
+      display: flex;
+      flex-direction: row;
+      flex-wrap: wrap;
+      gap: 10px;
+      .nft {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        gap: 10px;
+        flex-wrap: wrap;
+        flex: 1;
+        border: 1px solid var(--foreground);
+        border-radius: 10px;
+        padding: 20px;
+
+        span {
+          height: 300px;
+        }
+
+        .nftImage {
+          position: relative;
+          width: 100%;
+          min-width: 300px;
+          height: 300px;
+
+          @media (max-width: 793px) {
+            min-width: 200px;
+            height: 200px;
+          }
+
+          @media (max-width: 500px) {
+            min-width: calc(100vw - 100px);
+            height: 150px;
+          }
+        }
+
+        .nftDetails {
+          display: flex;
+          flex-direction: column;
+          gap: 5px;
+          text-align: center;
+          width: 100%;
+          border: 1px solid var(--foreground);
+          padding: 10px;
+          border-radius: 5px;
+        }
+      }
     }
   }
 }
