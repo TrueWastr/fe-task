@@ -10,19 +10,6 @@ type WalletInfo = {
   }[];
 };
 
-type Utxo = {
-  tx_hash: string;
-  output_index: number;
-  amount: {
-    unit: string;
-    quantity: string;
-  }[];
-  block: string;
-  data_hash?: string;
-  inline_datum?: string;
-  reference_script_hash?: string;
-};
-
 const WALLET_ADDRESS = process.env.CARDANO_WALLET_ADDRESS as string;
 
 async function getWalletInfo(address: string): Promise<WalletInfo> {
