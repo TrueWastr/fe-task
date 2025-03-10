@@ -59,7 +59,6 @@ export function extractNFTs(utxos: Utxo[]): NFT[] {
       }
     });
   });
-  console.log("Extracted NFTs:", nfts);
   return nfts;
 }
 
