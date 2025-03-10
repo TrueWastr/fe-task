@@ -105,6 +105,7 @@ export default async function Home() {
                         alt={nft.asset}
                         fill
                         style={{ objectFit: "contain" }}
+                        priority={true}
                       />
                     </div>
                   ) : (
