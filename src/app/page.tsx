@@ -106,6 +106,7 @@ export default async function Home() {
                         fill
                         style={{ objectFit: "contain" }}
                         priority={true}
+                        sizes="(max-width: 793px) 200px, 300px"
                       />
                     </div>
                   ) : (
