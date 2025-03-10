@@ -78,7 +78,6 @@ export default async function Home() {
       return { ...nft, image };
     })
   );
-  //const nftsWithImages = new Array<NFT>();
 
   // Calculate ADA balance (convert lovelace to ADA)
   const adaBalance =
@@ -86,42 +85,41 @@ export default async function Home() {
       .filter((item) => item.unit === "lovelace")
       .reduce((acc, item) => acc + Number(item.quantity), 0) / 1e6;
 
-  console.log(walletInfo);
-  console.log(utxos);
   return (
-    <div className={styles.page}>
-      <h1>Wallet Overview</h1>
-      <section className={styles.walletInfo}>
+    <>
+      <div className={styles.navigation}>
         <p>Balance: {adaBalance.toFixed(2)} ADA</p>
-      </section>
-      <section className={styles.nftCollection}>
-        <h2>NFT Collection: </h2>
-        {nftsWithImages.length === 0 ? (
-          <p>No NFTs found in this wallet.</p>
-        ) : (
-          <div className={styles.nftGrid}>
-            {nftsWithImages.map((nft, index) => (
-              <div key={index} className={styles.nft}>
-                {nft.image && resolveIpfsUrl(nft.image) !== "" ? (
-                  <div className={styles.nftImage}>
-                    <Image
-                      src={resolveIpfsUrl(nft.image)}
-                      alt={nft.asset}
-                      fill
-                      style={{ objectFit: "cover" }}
-                    />
+      </div>
+      <div className={styles.page}>
+        <h1>NFT Collection: </h1>
+        <section className={styles.nftCollection}>
+          {nftsWithImages.length === 0 ? (
+            <p>No NFTs found in this wallet.</p>
+          ) : (
+            <div className={styles.nftGrid}>
+              {nftsWithImages.map((nft, index) => (
+                <div key={index} className={styles.nft}>
+                  {nft.image && resolveIpfsUrl(nft.image) !== "" ? (
+                    <div className={styles.nftImage}>
+                      <Image
+                        src={resolveIpfsUrl(nft.image)}
+                        alt={nft.asset}
+                        fill
+                        style={{ objectFit: "contain" }}
+                      />
+                    </div>
+                  ) : (
+                    <span>No Image</span>
+                  )}
+                  <div className={styles.nftDetails}>
+                    <p>{nft.asset}</p>
                   </div>
-                ) : (
-                  <span>No Image</span>
-                )}
-                <div className={styles.nftDetails}>
-                  <p>{nft.asset}</p>
                 </div>
-              </div>
-            ))}
-          </div>
-        )}
-      </section>
-    </div>
+              ))}
+            </div>
+          )}
+        </section>
+      </div>
+    </>
   );
 }
