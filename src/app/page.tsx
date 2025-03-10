@@ -15,10 +15,9 @@ async function getWalletInfo(address: string): Promise<WalletInfo> {
     `${process.env.BLOCKFROST_BASE_URL}/addresses/${address}`,
     {
       headers: {
-        // Blockfrost expects your API key in the "project_id" header.
         project_id: process.env.BLOCKFROST_API_KEY as string,
       },
-      next: { revalidate: 60 }, // ISR: revalidate data every 60 seconds
+      next: { revalidate: 60 },
     }
   );
   if (!res.ok) {
@@ -29,7 +28,7 @@ async function getWalletInfo(address: string): Promise<WalletInfo> {
 
 async function getAssetImage(assetId: string): Promise<string | null> {
   const res = await fetch(
-    `${process.env.BLOCKFROST_BASE_URL}/assets/${assetId}`,
+    `https://cardano-mainnet.blockfrost.io/api/v0/assets/${assetId}`,
     {
       headers: {
         project_id: process.env.BLOCKFROST_API_KEY as string,
@@ -40,9 +39,12 @@ async function getAssetImage(assetId: string): Promise<string | null> {
     return null;
   }
   const data = await res.json();
-  // Prefer onchain_metadata if available
   if (data.onchain_metadata && data.onchain_metadata.image) {
-    return data.onchain_metadata.image;
+    const imageData = data.onchain_metadata.image;
+    if (Array.isArray(imageData)) {
+      return imageData[0] + imageData[1];
+    }
+    return imageData;
   }
   return null;
 }
@@ -68,10 +70,8 @@ export default async function Home() {
     getWalletInfo(WALLET_ADDRESS),
     getWalletUtxos(WALLET_ADDRESS),
   ]);
-  // Extract NFTs from UTXOs
   const nfts = extractNFTs(utxos);
 
-  // For each NFT, fetch its image metadata concurrently.
   const nftsWithImages: NFT[] = await Promise.all(
     nfts.map(async (nft) => {
       const image = await getAssetImage(nft.assetId);
@@ -79,7 +79,6 @@ export default async function Home() {
     })
   );
 
-  // Calculate ADA balance (convert lovelace to ADA)
   const adaBalance =
     walletInfo.amount
       .filter((item) => item.unit === "lovelace")

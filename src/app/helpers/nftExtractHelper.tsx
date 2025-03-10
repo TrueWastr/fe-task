@@ -21,25 +21,23 @@ export type Utxo = {
 };
 
 export type NFT = {
-  assetId: string; // Full asset identifier (policy ID + asset name hex)
+  assetId: string;
   policy: string;
-  asset: string; // Decoded asset name, if possible
+  asset: string;
   quantity: string;
   price: number;
-  image?: string | null; // URL of the NFT image (if available)
+  image?: string | null;
 };
 
 export function extractNFTs(utxos: Utxo[]): NFT[] {
   const nfts: NFT[] = [];
   utxos.forEach((utxo) => {
-    // Get the ADA amount in this UTXO as price (1 ADA = 1e6 lovelace)
     const adaItem = utxo.amount.find((item) => item.unit === "lovelace");
     const price = adaItem ? Number(adaItem.quantity) / 1e6 : undefined;
-    // Iterate over each token in the UTXO
+
     utxo.amount.forEach((item) => {
-      // Identify NFT tokens by excluding ADA and ensuring quantity equals "1"
       if (item.unit !== "lovelace" && item.quantity === "1") {
-        const assetId = item.unit; // full asset id = policyID + assetName (in hex)
+        const assetId = item.unit;
         const policy = assetId.slice(0, 56);
         const assetHex = assetId.slice(56);
         let assetName = assetHex;
@@ -56,11 +54,12 @@ export function extractNFTs(utxos: Utxo[]): NFT[] {
           policy,
           asset: assetName,
           quantity: item.quantity,
-          price: price ? price : 0, // attach the ADA price from this UTXO
+          price: price ? price : 0,
         });
       }
     });
   });
+  console.log("Extracted NFTs:", nfts);
   return nfts;
 }
 
@@ -76,7 +75,6 @@ export function transformAssetName(name: string): string {
   const regex = /^(.*?)(0*)(\d+)$/;
   const match = name.match(regex);
   if (match) {
-    // match[1] is the name part, match[3] is the numeric part without the leading zeros.
     return `${match[1].trim()} #${match[3]}`;
   }
   return name;
